@@ -97,4 +97,60 @@ class AuthControllerTest(
             jsonPath("$.result") { value("SUCCESS") }
         }
     }
+
+    test("회원가입 실패, 잘못된 이메일 형식") {
+        val request = SignupRequestDto("example.com", "password1!", "김노랑", "gargamel1", "010-1234-3239")
+
+        mockMvc.post("/api/auth/signup") {
+            content = objectMapper.writeValueAsString(request)
+            contentType = MediaType.APPLICATION_JSON
+        }
+            .andExpect {
+                status { isBadRequest() }
+                jsonPath("$.result") { value("ERROR") }
+                jsonPath("$.error.message") { value("올바른 이메일 형식이 아닙니다.") }
+            }
+    }
+
+    test("회원가입 실패, 잘못된 비밀번호 길이") {
+        val request = SignupRequestDto("fff@example.com", "pass", "김노랑", "gargamel2", "010-1234-5659")
+
+        mockMvc.post("/api/auth/signup") {
+            content = objectMapper.writeValueAsString(request)
+            contentType = MediaType.APPLICATION_JSON
+        }
+            .andExpect {
+                status { isBadRequest() }
+                jsonPath("$.result") { value("ERROR") }
+                jsonPath("$.error.message") { value("비밀번호는 최소 8자 이상 최대 15자 이하여야 합니다.") }
+            }
+    }
+
+    test("회원가입 실패, 잘못된 닉네임 길이") {
+        val request = SignupRequestDto("yyy@example.com", "password1!", "김노랑", "gargamelllllll", "010-1223-5679")
+
+        mockMvc.post("/api/auth/signup") {
+            content = objectMapper.writeValueAsString(request)
+            contentType = MediaType.APPLICATION_JSON
+        }
+            .andExpect {
+                status { isBadRequest() }
+                jsonPath("$.result") { value("ERROR") }
+                jsonPath("$.error.message") { value("닉네임은 최소 2자 이상 최대 10자 이하여야 합니다.") }
+            }
+    }
+
+    test("회원가입 실패, 잘못된 전화번호 형식") {
+        val request = SignupRequestDto("zzz@example.com", "password1!", "김노랑", "gargamel3", "01d-1223-5679")
+
+        mockMvc.post("/api/auth/signup") {
+            content = objectMapper.writeValueAsString(request)
+            contentType = MediaType.APPLICATION_JSON
+        }
+            .andExpect {
+                status { isBadRequest() }
+                jsonPath("$.result") { value("ERROR") }
+                jsonPath("$.error.message") { value("올바른 전화번호 형식이 아닙니다.") }
+            }
+    }
 })
