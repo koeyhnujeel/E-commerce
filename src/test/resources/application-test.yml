@@ -1,0 +1,17 @@
+spring:
+  output:
+    ansi:
+      enabled: ALWAYS
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+jwt:
+  secret-key: VmVyeVBvd2VyZnVsU2VjcmV0S2V5Rm9ySldUQXV0aGVudGljYXRpb25SZW1lbWJlcgfdasfsafsdfdsfaffdfadfafsadfasfsdafd==
+  access-token-expire-time: 1800000
+  refresh-token-expire-time: 604800000
