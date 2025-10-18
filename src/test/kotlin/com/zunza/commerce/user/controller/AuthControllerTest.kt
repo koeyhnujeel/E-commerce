@@ -10,6 +10,7 @@ import com.zunza.commerce.infrastructure.redis.RefreshTokenRepository
 import com.zunza.commerce.security.JwtProvider
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
@@ -53,6 +54,8 @@ class AuthControllerTest(
             jsonPath("$.data.accessToken") { exists() }
             cookie() { exists("refreshToken") }
         }
+
+        refreshTokenRepository.findByUserId(1L) shouldNotBe null
     }
 
     test("로그인 실패 - 비밀번호 오류") {
