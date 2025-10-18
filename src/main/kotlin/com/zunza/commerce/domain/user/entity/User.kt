@@ -1,6 +1,5 @@
 package com.zunza.commerce.domain.user.entity
 
-import com.zunza.commerce.domain.user.dto.request.SignupRequestDto
 import com.zunza.commerce.support.entity.BaseEntity
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -31,11 +30,11 @@ class User(
     var nickname: String = "",
 
     @Column(nullable = false, unique = true)
-    var phone: String ,
+    var phone: String,
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    val userRole: UserRole = UserRole.USER,
+    val userRole: UserRole = UserRole.ROLE_USER,
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -66,7 +65,7 @@ class User(
 }
 
 enum class UserRole() {
-    ADMIN, USER, PARTNER
+    ROLE_ADMIN, ROLE_USER, ROLE_PARTNER
 }
 
 enum class UserType() {
