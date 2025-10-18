@@ -8,7 +8,8 @@ import com.zunza.commerce.domain.user.exception.DuplicateEmailException
 import com.zunza.commerce.domain.user.exception.DuplicateNicknameException
 import com.zunza.commerce.domain.user.repository.UserRepository
 import com.zunza.commerce.domain.user.service.AuthService
-import io.kotest.assertions.any
+import com.zunza.commerce.infrastructure.redis.RefreshTokenRepository
+import com.zunza.commerce.security.JwtProvider
 import io.kotest.assertions.throwables.shouldNotThrow
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.FunSpec
@@ -23,7 +24,15 @@ import org.springframework.security.crypto.password.PasswordEncoder
 class AuthServiceTest : FunSpec ({
     val userRepository = mockk<UserRepository>()
     val passwordEncoder = mockk<PasswordEncoder>()
-    val authService = AuthService(userRepository, passwordEncoder)
+    val jwtProvider = mockk<JwtProvider>()
+    val refreshTokenRepository = mockk<RefreshTokenRepository>()
+
+    val authService = AuthService(
+        userRepository = userRepository,
+        passwordEncoder = passwordEncoder,
+        jwtProvider = jwtProvider,
+        refreshTokenRepository = refreshTokenRepository
+    )
 
     afterTest {
         clearMocks(userRepository)
@@ -91,7 +100,7 @@ class AuthServiceTest : FunSpec ({
         savedUser.name shouldBe "김블루"
         savedUser.nickname shouldBe "gargamel"
         savedUser.phone shouldBe "010-1234-5678"
-        savedUser.userRole shouldBe UserRole.USER
+        savedUser.userRole shouldBe UserRole.ROLE_USER
         savedUser.userType shouldBe UserType.NORMAL
         savedUser.oAuth2Provider shouldBe null
     }
