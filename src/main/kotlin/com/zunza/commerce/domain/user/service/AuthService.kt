@@ -2,11 +2,7 @@ package com.zunza.commerce.domain.user.service
 
 import com.zunza.commerce.domain.user.dto.LoginResultDto
 import com.zunza.commerce.domain.user.dto.request.LoginRequestDto
-import com.zunza.commerce.domain.user.dto.request.SignupRequestDto
-import com.zunza.commerce.domain.user.entity.User
 import com.zunza.commerce.domain.user.exception.AuthenticationFailedException
-import com.zunza.commerce.domain.user.exception.DuplicateEmailException
-import com.zunza.commerce.domain.user.exception.DuplicateNicknameException
 import com.zunza.commerce.domain.user.repository.UserRepository
 import com.zunza.commerce.infrastructure.redis.RefreshTokenRepository
 import com.zunza.commerce.security.JwtProvider
@@ -20,31 +16,6 @@ class AuthService(
     private val passwordEncoder: PasswordEncoder,
     private val refreshTokenRepository: RefreshTokenRepository
 ) {
-    fun checkEmailDuplicate(email: String) {
-        if (userRepository.existsByEmail(email)) {
-            throw DuplicateEmailException()
-        }
-    }
-
-    fun checkNicknameDuplicate(nickname: String) {
-        if (userRepository.existsByNickname(nickname)) {
-            throw DuplicateNicknameException()
-        }
-    }
-
-    fun signup(request: SignupRequestDto) {
-        val encodedPassword = passwordEncoder.encode(request.password)
-        val user = User.createNormalUser(
-            request.email,
-            encodedPassword,
-            request.name,
-            request.nickname,
-            request.phone
-        )
-
-        userRepository.save(user)
-    }
-
     fun login(request: LoginRequestDto): LoginResultDto {
         val user = userRepository.findByEmail(request.email)
             ?: throw AuthenticationFailedException()
