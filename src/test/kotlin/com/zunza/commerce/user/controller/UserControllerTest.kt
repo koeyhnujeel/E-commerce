@@ -27,7 +27,7 @@ class UserControllerTest(
 ) : FunSpec({
 
     beforeSpec {
-        val user = User(email = "aaa@example.com", password = "password1!", name = "김파랑", nickname = "smurf", phone = "010-1234-5678")
+        val user = User(email = "aaa@example.com", password = "password1!", name = "김파랑", nickname = "smurff", phone = "010-9234-5678")
         userRepository.save(user)
     }
 
@@ -72,7 +72,7 @@ class UserControllerTest(
     }
 
     test("닉네임 중복 확인 시, 사용 중인 닉네임이면 409를 반환한다.") {
-        val nickname = "smurf"
+        val nickname = "smurff"
 
         mockMvc.get("/api/users/signup/duplicate/nickname") {
             param("nickname", nickname)
